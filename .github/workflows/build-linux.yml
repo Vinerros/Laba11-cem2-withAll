@@ -1,0 +1,30 @@
+name: Build Linux App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Make Maven executable
+        run: chmod +x mvnw
+
+      - name: Build application
+        run: ./mvnw clean javafx:jlink
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: target/
